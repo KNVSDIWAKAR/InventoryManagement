@@ -3,41 +3,36 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
-const dotenv = require("dotenv");
 const cors = require("cors");
-const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
+const dotenv = require("dotenv");
 const UserModel = require("./models/Users");
-
-dotenv.config();
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 
 const app = express();
 const port = process.env.PORT || 4000;
 
-// Middleware
+dotenv.config();
+
+// CORS Middleware
 app.use(
   cors({
-    origin: ["https://frontend-steel-pi.vercel.app"],
-    methods: ["GET", "POST", "DELETE", "PATCH", "PUT", "FETCH"],
+    origin: [
+      "https://frontend-steel-pi.vercel.app",
+      "https://final-ram.vercel.app"
+    ],
+    methods: ["GET", "POST", "DELETE", "PATCH", "PUT"],
     credentials: true,
   })
 );
+
 app.use(express.json());
 app.use(cookieParser());
 
-app.get("/", (req, res) => {
-  res.setHeader("Access-Control-Allow-Credentials", true);
-  res.send("API is Running...");
-});
-
 mongoose.connect(
-  "mongodb+srv://merninventory:1234@cluster0.jyjxmfl.mongodb.net/Inventory",
-  {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  }
+  "mongodb+srv://merninventory:1234@cluster0.jyjxmfl.mongodb.net/Inventory"
 );
 
-const verifyUser = (req, res, next) => {
+const varifyUser = (req, res, next) => {
   const token = req.cookies.token;
   if (!token) {
     return res.json("Token is missing");
@@ -56,7 +51,7 @@ const verifyUser = (req, res, next) => {
   }
 };
 
-app.get("/dashboard", verifyUser, (req, res) => {
+app.get("/dashboard", varifyUser, (req, res) => {
   res.json("Success");
 });
 
@@ -84,7 +79,6 @@ app.post("/login", (req, res) => {
             { expiresIn: "1d" }
           );
           res.cookie("token", token);
-          console.log(user.role);
           return res.json({ Status: "Success", role: user.role });
         } else {
           return res.json("password is incorrect");
@@ -96,10 +90,10 @@ app.post("/login", (req, res) => {
   });
 });
 
+// MongoDB connection
 const uri =
   "mongodb+srv://merninventory:1234@cluster0.jyjxmfl.mongodb.net/?retryWrites=true&w=majority";
 
-// Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
   serverApi: {
     version: ServerApiVersion.v1,
@@ -122,21 +116,17 @@ async function run() {
 
     // READ (VIEW PRODUCTS)
     app.get("/view-product", async (req, res) => {
-      const gadgets = await store.find().toArray();
-      res.setHeader(
-        "Access-Control-Allow-Origin",
-        "https://frontend-steel-pi.vercel.app"
-      );
-      res.setHeader(
-        "Access-Control-Allow-Methods",
-        "GET, POST, OPTIONS, PUT, PATCH, DELETE"
-      );
-      res.setHeader(
-        "Access-Control-Allow-Headers",
-        "Content-Type, Authorization"
-      );
-      res.setHeader("Access-Control-Allow-Credentials", "true");
-      res.json(gadgets);
+      try {
+        const gadgets = await store.find().toArray();
+        res.setHeader("Access-Control-Allow-Origin", req.headers.origin); // Dynamic origin
+        res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH, DELETE");
+        res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+        res.setHeader("Access-Control-Allow-Credentials", "true");
+        res.json(gadgets);
+      } catch (error) {
+        console.error("Error in /view-product route:", error);
+        res.status(500).json({ error: "Internal Server Error" });
+      }
     });
 
     // UPDATE (UPDATE PRODUCTS)
@@ -145,9 +135,7 @@ async function run() {
         const id = req.params.id;
         const updateProductData = req.body;
         if (Object.keys(updateProductData).length === 0) {
-          return res
-            .status(400)
-            .json({ error: "No data provided for update." });
+          return res.status(400).json({ error: "No data provided for update." });
         }
 
         const filter = { _id: new ObjectId(id) };
@@ -162,9 +150,7 @@ async function run() {
         const result = await store.updateOne(filter, updateDoc, options);
 
         if (result.matchedCount === 0 && result.modifiedCount === 0) {
-          return res
-            .status(404)
-            .json({ error: "No product found with the provided ID." });
+          return res.status(404).json({ error: "No product found with the provided ID." });
         }
 
         res.json({ status: "Product updated successfully." });
@@ -232,9 +218,7 @@ async function run() {
           const product = await store.findOne({ _id: new ObjectId(productId) });
 
           if (!product || product.quantity < quantity) {
-            throw new Error(
-              `Insufficient quantity for the product with ID: ${productId}`
-            );
+            throw new Error(`Insufficient quantity for the product with ID: ${productId}`);
           }
 
           const filter = { _id: new ObjectId(productId) };
@@ -255,19 +239,5 @@ async function run() {
       }
     });
 
-    await client.db("admin").command({ ping: 1 });
     console.log(
-      "Pinged your deployment. You successfully connected to MongoDB!"
-    );
-  } catch (error) {
-    console.error("Error in run function:", error);
-  } finally {
-    // Ensure that the client will close when you finish/error
-    // await client.close();
-  }
-}
-run().catch(console.dir);
-
-app.listen(port, () => {
-  console.log(`App listening on port ${port}`);
-});
+      "Pinged your deployment);
