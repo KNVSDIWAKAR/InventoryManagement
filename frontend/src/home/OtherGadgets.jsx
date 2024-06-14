@@ -1,17 +1,19 @@
-import React from 'react'
-import {useState,useEffect} from 'react'
-import GadgetCard from '../components/GadgetCard';
+import React from "react";
+import { useState, useEffect } from "react";
+import GadgetCard from "../components/GadgetCard";
 
 const OtherGadgets = () => {
-    const [gadgets , setGadgets] =useState([]);
+  const [gadgets, setGadgets] = useState([]);
 
-    useEffect(() =>{
-        fetch("https://final-ram-69.vercel.app/view-product").then(res => res.json()).then(data => setGadgets(data.slice(3,8)))
-    },[])
+  useEffect(() => {
+    fetch("https://backend-six-flax.vercel.app/view-product")
+      .then((res) => res.json())
+      .then((data) => setGadgets(data.slice(3, 8)));
+  }, []);
   return (
-    <div className='mt-15 py-12  px-4 lg:px-24' >
-        <GadgetCard gadgets={gadgets} headline="Other Selling Products"/>
+    <div className="mt-15 py-12  px-4 lg:px-24">
+      <GadgetCard gadgets={gadgets} headline="Other Selling Products" />
     </div>
-  )
-}
-export default OtherGadgets
+  );
+};
+export default OtherGadgets;

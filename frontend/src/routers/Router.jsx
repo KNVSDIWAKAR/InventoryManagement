@@ -1,7 +1,4 @@
-import {
-    createBrowserRouter,
-    RouterProvider,
-  } from "react-router-dom"
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import App from "../App";
 import Home from "../home/Home";
 import Store from "../store/Store";
@@ -20,139 +17,125 @@ import Login from "../Authentication/Login";
 import LogOut from "../Authentication/LogOut";
 import { login } from "../Don";
 import DashboardLayout from "../Dashboard/DashboardLayout";
-import PrivateRoute from "../Authentication/PrivateRoute"
-import UserPrivateRoute from "../Authentication/UserPrivateRoute"
+import PrivateRoute from "../Authentication/PrivateRoute";
+import UserPrivateRoute from "../Authentication/UserPrivateRoute";
 import Cart from "../Cart";
 import AdminProducts from "../Dashboard/AdminProducts";
 import AdminSingleProduct from "../Dashboard/AdminSingleProduct";
 const router = createBrowserRouter([
-    {
-      path: "/",
-      element: <App/>,
-      children: [
-        {
-          path: '/',
-          element: login ? <Home/> : <Login/>
-        },
-        
-        {
-            path:"/store",
-            element:<Store/>
-        },
-        {
-            path:"/blog",
-            element:<Blog/>
-        },
-        {
-            path:"/singleproduct",
-            element:<SingleProduct/>
-        },
-        {
-            path:"/about",
-            element:<About/>
-        },
-        {
-            path:"/product/:id",
-            element:<SingleProduct/>,
-            loader: ({params})=> fetch(`https://final-ram-69.vercel.app/product/${params.id}`)
+  {
+    path: "/",
+    element: <App />,
+    children: [
+      {
+        path: "/",
+        element: login ? <Home /> : <Login />,
+      },
 
-        }
-
-      ]
-    },
-    {
-      path:"/admin/dashboard",
-      element: 
+      {
+        path: "/store",
+        element: <Store />,
+      },
+      {
+        path: "/blog",
+        element: <Blog />,
+      },
+      {
+        path: "/singleproduct",
+        element: <SingleProduct />,
+      },
+      {
+        path: "/about",
+        element: <About />,
+      },
+      {
+        path: "/product/:id",
+        element: <SingleProduct />,
+        loader: ({ params }) =>
+          fetch(`https://backend-six-flax.vercel.app/product/${params.id}`),
+      },
+    ],
+  },
+  {
+    path: "/admin/dashboard",
+    element: (
       <PrivateRoute>
         <DashboardLayout></DashboardLayout>
-        
       </PrivateRoute>
-      ,
-      children:[
-        {
-          
-          path:"/admin/dashboard/dashboards",
-          element: <Dashboard/>
-
-        },
-        {
-          path:"/admin/dashboard/upload",
-          element:<UploadProducts/>
-       
-                
-        }, 
-        {
-          path:"/admin/dashboard/manage",
-          element:<ManageProducts/>,
-        },
-        {
-          path:"/admin/dashboard/edit/:id",
-          element:<EditProducts/>,
-          loader: ({params})=> fetch(`https://final-ram-69.vercel.app/product/${params.id}`),
-        },
-        {
-          path:"/admin/dashboard/view-products",
-          element:<AdminProducts/>
-        },
-        {
-          path: "/admin/dashboard/single-product/:id",
-          element: <AdminSingleProduct />,
-          loader: ({ params }) => fetch(`https://final-ram-69.vercel.app/searchById/${params.id}`)
- }
-       
-      
-      ]
-
-    },
-    {
-      path:"/user/dashboard",
-      element:
-      <UserPrivateRoute>
-        <UDashboardLayout>
-
-        </UDashboardLayout>
-      </UserPrivateRoute>,
-
-      children:[
-        {
-          path:"/user/dashboard",
-          element:<UDashboard/>,
-          
-        },
-        {
-          path:"/user/dashboard/viewproducts",
-          element:<UViewproduct/>
-        },
-        { 
-          path:"/user/dashboard/products",
-          element:<Store/>
-
-      
+    ),
+    children: [
+      {
+        path: "/admin/dashboard/dashboards",
+        element: <Dashboard />,
       },
-    
-        {},
-      ]
-    
-    },
-   
-    {
-      path: "/login",
-      element: <Login/>
-    },
-    {
-      path: "/register",
-      element: <SignUp/>
-    },
-    {
-      path:"/signout",
-      element: <LogOut/>
-    },
-    {
-      path:"/cart",
-      element:<Cart/>
-    }
+      {
+        path: "/admin/dashboard/upload",
+        element: <UploadProducts />,
+      },
+      {
+        path: "/admin/dashboard/manage",
+        element: <ManageProducts />,
+      },
+      {
+        path: "/admin/dashboard/edit/:id",
+        element: <EditProducts />,
+        loader: ({ params }) =>
+          fetch(`https://backend-six-flax.vercel.app/product/${params.id}`),
+      },
+      {
+        path: "/admin/dashboard/view-products",
+        element: <AdminProducts />,
+      },
+      {
+        path: "/admin/dashboard/single-product/:id",
+        element: <AdminSingleProduct />,
+        loader: ({ params }) =>
+          fetch(`https://backend-six-flax.vercel.app/searchById/${params.id}`),
+      },
+    ],
+  },
+  {
+    path: "/user/dashboard",
+    element: (
+      <UserPrivateRoute>
+        <UDashboardLayout></UDashboardLayout>
+      </UserPrivateRoute>
+    ),
 
-  ]);
+    children: [
+      {
+        path: "/user/dashboard",
+        element: <UDashboard />,
+      },
+      {
+        path: "/user/dashboard/viewproducts",
+        element: <UViewproduct />,
+      },
+      {
+        path: "/user/dashboard/products",
+        element: <Store />,
+      },
 
-  export default router;
+      {},
+    ],
+  },
 
+  {
+    path: "/login",
+    element: <Login />,
+  },
+  {
+    path: "/register",
+    element: <SignUp />,
+  },
+  {
+    path: "/signout",
+    element: <LogOut />,
+  },
+  {
+    path: "/cart",
+    element: <Cart />,
+  },
+]);
+
+export default router;

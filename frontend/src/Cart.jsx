@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useCart } from './CartContext';
+import React, { useState } from "react";
+import { useCart } from "./CartContext";
 
 const Cart = () => {
   const { state, dispatch } = useCart();
@@ -13,37 +13,35 @@ const Cart = () => {
 
   const handleQuantityChange = (itemId, newQuantity) => {
     dispatch({
-      type: 'UPDATE_QUANTITY',
+      type: "UPDATE_QUANTITY",
       payload: { itemId, newQuantity },
     });
   };
 
   const handlePlaceOrder = () => {
-    
     const orderData = cart.map(({ id, quantity }) => ({ id, quantity }));
 
-
     // Implement the logic to place the order and update the database
-    console.log('Placing order...');
-    console.log('Updating database with new quantities:', orderData);
+    console.log("Placing order...");
+    console.log("Updating database with new quantities:", orderData);
 
     // For demonstration purposes, let's assume you have a backend endpoint for placing orders
-    fetch('https://final-ram-69.vercel.app/place-order', {
-      method: 'POST',
+    fetch("https://backend-six-flax.vercel.app/place-order", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({ cart: orderData }), // Send orderData instead of cart directly
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log('Order placed successfully:', data);
+        console.log("Order placed successfully:", data);
         setOrderSuccess(true);
         // Reset the cart after a successful order (if needed)
-        dispatch({ type: 'RESET_CART' });
+        dispatch({ type: "RESET_CART" });
       })
       .catch((error) => {
-        console.error('Error placing order:', error);   
+        console.error("Error placing order:", error);
       });
   };
 
@@ -75,18 +73,25 @@ const Cart = () => {
                       value={item.quantity}
                       min={1}
                       onChange={(e) =>
-                        handleQuantityChange(item.id, parseInt(e.target.value, 10))
+                        handleQuantityChange(
+                          item.id,
+                          parseInt(e.target.value, 10)
+                        )
                       }
                     />
                   </td>
-                  <td className="py-2 px-4 border-b">${item.price * item.quantity}</td>
+                  <td className="py-2 px-4 border-b">
+                    ${item.price * item.quantity}
+                  </td>
                 </tr>
               ))}
             </tbody>
           </table>
 
           <div className="mt-4">
-            <p className="text-xl font-semibold">Total: ${getTotalPrice().toFixed(2)}</p>
+            <p className="text-xl font-semibold">
+              Total: ${getTotalPrice().toFixed(2)}
+            </p>
             <button
               className="bg-green-500 text-white px-4 py-2 rounded"
               onClick={handlePlaceOrder}
@@ -94,8 +99,10 @@ const Cart = () => {
               Order Now
             </button>
           </div>
-          
-          {orderSuccess && <p className="text-green-500 mt-4">Order placed successfully!</p>}
+
+          {orderSuccess && (
+            <p className="text-green-500 mt-4">Order placed successfully!</p>
+          )}
         </div>
       )}
     </div>
