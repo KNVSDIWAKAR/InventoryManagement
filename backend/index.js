@@ -116,17 +116,12 @@ async function run() {
 
     // READ (VIEW PRODUCTS)
     app.get("/view-product", async (req, res) => {
-      try {
-        const gadgets = await store.find().toArray();
-        res.setHeader("Access-Control-Allow-Origin", req.headers.origin); // Dynamic origin
-        res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH, DELETE");
-        res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
-        res.setHeader("Access-Control-Allow-Credentials", "true");
-        res.json(gadgets);
-      } catch (error) {
-        console.error("Error in /view-product route:", error);
-        res.status(500).json({ error: "Internal Server Error" });
-      }
+      const gadgets = await store.find().toArray();
+      res.setHeader("Access-Control-Allow-Origin", req.headers.origin); // Dynamic origin
+      res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH, DELETE");
+      res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+      res.setHeader("Access-Control-Allow-Credentials", "true");
+      res.json(gadgets);
     });
 
     // UPDATE (UPDATE PRODUCTS)
@@ -240,4 +235,15 @@ async function run() {
     });
 
     console.log(
-      "Pinged your deployment);
+      "Pinged your deployment. You successfully connected to MongoDB!"
+    );
+  } finally {
+    // await client.close(); // Uncomment if you want to close the connection after the function completes.
+  }
+}
+
+run().catch(console.dir);
+
+app.listen(port, () => {
+  console.log(`Server running on port ${port}`);
+});
