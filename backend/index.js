@@ -16,9 +16,7 @@ const port = process.env.PORT || 4000;
 // Middleware
 app.use(
   cors({
-    origin: [
-      "https://frontend-steel-pi.vercel.app/",
-    ],
+    origin: ["https://frontend-steel-pi.vercel.app"],
     methods: ["GET", "POST", "DELETE", "PATCH", "PUT", "FETCH"],
     credentials: true,
   })
@@ -127,7 +125,7 @@ async function run() {
       const gadgets = await store.find().toArray();
       res.setHeader(
         "Access-Control-Allow-Origin",
-        "https://final-ram.vercel.app"
+        "https://frontend-steel-pi.vercel.app"
       );
       res.setHeader(
         "Access-Control-Allow-Methods",
