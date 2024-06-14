@@ -12,13 +12,15 @@ const app = express();
 const port = process.env.PORT || 4000;
 
 dotenv.config();
-
-// CORS Middleware
+app.get("/", (req, res) => {
+  res.setHeader("Access-Control-Allow-Credentials", true);
+  res.send("API is Running...");
+});
 app.use(
   cors({
     origin: [
       "https://frontend-steel-pi.vercel.app",
-      "https://final-ram.vercel.app"
+      "https://final-ram.vercel.app",
     ],
     methods: ["GET", "POST", "DELETE", "PATCH", "PUT"],
     credentials: true,
@@ -118,8 +120,14 @@ async function run() {
     app.get("/view-product", async (req, res) => {
       const gadgets = await store.find().toArray();
       res.setHeader("Access-Control-Allow-Origin", req.headers.origin); // Dynamic origin
-      res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH, DELETE");
-      res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+      res.setHeader(
+        "Access-Control-Allow-Methods",
+        "GET, POST, OPTIONS, PUT, PATCH, DELETE"
+      );
+      res.setHeader(
+        "Access-Control-Allow-Headers",
+        "Content-Type, Authorization"
+      );
       res.setHeader("Access-Control-Allow-Credentials", "true");
       res.json(gadgets);
     });
@@ -130,7 +138,9 @@ async function run() {
         const id = req.params.id;
         const updateProductData = req.body;
         if (Object.keys(updateProductData).length === 0) {
-          return res.status(400).json({ error: "No data provided for update." });
+          return res
+            .status(400)
+            .json({ error: "No data provided for update." });
         }
 
         const filter = { _id: new ObjectId(id) };
@@ -145,7 +155,9 @@ async function run() {
         const result = await store.updateOne(filter, updateDoc, options);
 
         if (result.matchedCount === 0 && result.modifiedCount === 0) {
-          return res.status(404).json({ error: "No product found with the provided ID." });
+          return res
+            .status(404)
+            .json({ error: "No product found with the provided ID." });
         }
 
         res.json({ status: "Product updated successfully." });
@@ -213,7 +225,9 @@ async function run() {
           const product = await store.findOne({ _id: new ObjectId(productId) });
 
           if (!product || product.quantity < quantity) {
-            throw new Error(`Insufficient quantity for the product with ID: ${productId}`);
+            throw new Error(
+              `Insufficient quantity for the product with ID: ${productId}`
+            );
           }
 
           const filter = { _id: new ObjectId(productId) };
