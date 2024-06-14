@@ -17,7 +17,6 @@ const port = process.env.PORT || 4000;
 app.use(
   cors({
     origin: [
-      "https://final-ram.vercel.app",
       "https://frontend-steel-pi.vercel.app/",
     ],
     methods: ["GET", "POST", "DELETE", "PATCH", "PUT", "FETCH"],
