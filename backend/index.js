@@ -21,7 +21,10 @@ app.get("/", (req, res) => {
 // middle ware
 app.use(
   cors({
-    origin: ["https://frontend-steel-pi.vercel.app"],
+    origin: [
+      "https://frontend-steel-pi.vercel.app",
+      "https://frontend-iwj01y0e0-dk13s-projects.vercel.app",
+    ],
     methods: ["Get", "POST", "DELETE", "PATCH", "PUT", "FETCH"],
     credentials: true,
   })
