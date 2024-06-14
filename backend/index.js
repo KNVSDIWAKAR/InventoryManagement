@@ -119,7 +119,10 @@ async function run() {
     // READ (VIEW PRODUCTS)
     app.get("/view-product", async (req, res) => {
       const gadgets = await store.find().toArray();
-      res.setHeader("Access-Control-Allow-Origin", req.headers.origin); // Dynamic origin
+      res.setHeader(
+        "Access-Control-Allow-Origin",
+        "https://frontend-steel-pi.vercel.app"
+      ); // Dynamic origin
       res.setHeader(
         "Access-Control-Allow-Methods",
         "GET, POST, OPTIONS, PUT, PATCH, DELETE"
