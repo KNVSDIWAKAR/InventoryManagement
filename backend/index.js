@@ -23,7 +23,7 @@ app.use(
   cors({
     origin: [
       "https://frontend-steel-pi.vercel.app",
-      "https://frontend-iwj01y0e0-dk13s-projects.vercel.app",
+      "https://final-ram.vercel.app",
     ],
     methods: ["Get", "POST", "DELETE", "PATCH", "PUT", "FETCH"],
     credentials: true,
